@@ -1,33 +1,51 @@
-HELP.md
-target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# === GERAL / SISTEMA OPERACIONAL ===
+.DS_Store
+Thumbs.db
+*.log
+tmp/
+temp/
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
+# === IDEs (VS Code, IntelliJ, Eclipse) ===
+.idea/
 *.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
 .vscode/
+*.classpath
+*.project
+*.settings/
+*.factorypath
+
+# === BACKEND (JAVA / MAVEN) ===
+backend/target/
+backend/*.log
+backend/help.md
+!backend/mvnw
+!backend/mvnw.cmd
+
+# === BANCO DE DADOS (IMPORTANTE) ===
+# Ignora a pasta onde o H2 salva os dados para não subir o banco real pro Git
+backend/dados/
+*.db
+*.mv.db
+*.trace.db
+
+# === FRONTEND (NODE / REACT) ===
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+
+# === OUTROS ARQUIVOS GERADOS ===
+*.class
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
