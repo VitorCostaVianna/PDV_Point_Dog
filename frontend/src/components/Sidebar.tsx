@@ -10,26 +10,35 @@ export function Sidebar() {
     ];
 
     return (
-        <div className="w-20 bg-blue-900 h-screen flex flex-col items-center py-6 shadow-xl z-50">
-            <div className="mb-8 text-white">
-                <Dog size={32} />
+        // Fundo com o Laranja Principal (#F28322)
+        <div className="w-20 bg-[#F28322] h-screen flex flex-col items-center py-6 shadow-xl z-50">
+            
+            {/* === ÁREA DA LOGO === */}
+            <div className="mb-8 p-2 bg-white rounded-full shadow-lg">
+                {/* DICA: Para colocar a logo real, substitua o ícone <Dog /> pela tag img:
+                   <img src="/logo.png" alt="Point Dog" className="w-8 h-8" />
+                */}
+                <Dog size={32} className="text-[#F28322]" />
             </div>
             
-            <nav className="flex flex-col gap-4 w-full">
-                {menuItems.map(item => (
-                    <Link 
-                        key={item.path} 
-                        to={item.path}
-                        className={`p-3 flex justify-center items-center transition-all ${
-                            location.pathname === item.path 
-                            ? 'bg-blue-700 text-white border-r-4 border-yellow-400' 
-                            : 'text-blue-300 hover:text-white hover:bg-blue-800'
-                        }`}
-                        title={item.label}
-                    >
-                        <item.icon size={24} />
-                    </Link>
-                ))}
+            <nav className="flex flex-col gap-4 w-full px-2">
+                {menuItems.map(item => {
+                    const isActive = location.pathname === item.path;
+                    return (
+                        <Link 
+                            key={item.path} 
+                            to={item.path}
+                            className={`p-3 rounded-xl flex justify-center items-center transition-all duration-200 ${
+                                isActive 
+                                ? 'bg-white text-[#F28322] shadow-md transform scale-105' 
+                                : 'text-white hover:bg-white/20'
+                            }`}
+                            title={item.label}
+                        >
+                            <item.icon size={24} />
+                        </Link>
+                    );
+                })}
             </nav>
         </div>
     );
