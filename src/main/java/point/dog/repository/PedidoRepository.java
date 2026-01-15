@@ -30,4 +30,8 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     // QUERY 3: Histórico por Data (Otimizado)
     @Query("SELECT p FROM Pedido p JOIN FETCH p.cliente WHERE p.dataHora BETWEEN :inicio AND :fim")
     List<Pedido> findByDataBetween(@Param("inicio") LocalDateTime inicio, @Param("fim") LocalDateTime fim);
+
+    // Busca pedidos de um cliente específico trazendo os itens (para evitar erro de Lazy Loading)
+    @Query("SELECT p FROM Pedido p JOIN FETCH p.itens i JOIN FETCH i.produto WHERE p.cliente.id = :clienteId ORDER BY p.dataHora DESC")
+    List<Pedido> findByClienteId(@Param("clienteId") Long clienteId);
 }

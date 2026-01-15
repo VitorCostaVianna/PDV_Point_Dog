@@ -26,25 +26,27 @@ public class VendaService {
 
         Cliente cliente;
 
+        // === 1. RESOLVER CLIENTE ===
         if (dto.getClienteId() != null) {
+            // Se veio ID, busca o existente
             cliente = clienteRepository.findById(dto.getClienteId())
                     .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
         } else {
-            // === VALIDAÇÃO NOVA ===
+            // Se NÃO veio ID, valida e cria NOVO
             if (dto.getClienteNome() == null || dto.getClienteNome().isBlank() ||
                     dto.getClienteEndereco() == null || dto.getClienteEndereco().isBlank() ||
                     dto.getClienteTelefone() == null || dto.getClienteTelefone().isBlank()) {
 
                 throw new RuntimeException("Para novos clientes, Nome, Endereço e Telefone são obrigatórios!");
             }
-        }
 
-        // Se passou, cria:
-        cliente = new Cliente();
-        cliente.setNome(dto.getClienteNome());
-        cliente.setTelefone(dto.getClienteTelefone());
-        cliente.setEndereco(dto.getClienteEndereco());
-        cliente = clienteRepository.save(cliente);
+            // AQUI ESTAVA O ERRO: A criação deve ficar SÓ aqui dentro do ELSE
+            cliente = new Cliente();
+            cliente.setNome(dto.getClienteNome());
+            cliente.setTelefone(dto.getClienteTelefone());
+            cliente.setEndereco(dto.getClienteEndereco());
+            cliente = clienteRepository.save(cliente);
+        }
 
         // === 2. INICIAR O PEDIDO ===
         Pedido pedido = new Pedido();
@@ -53,31 +55,31 @@ public class VendaService {
 
         double totalCalculado = 0.0;
 
-        // === 3. RESOLVER OS PRODUTOS (FIND OR CREATE) ===
+        // === 3. RESOLVER OS PRODUTOS ===
         for (VendaDTO.ItemInput itemDto : dto.getItens()) {
             Produto produto;
 
             if (itemDto.getProdutoId() != null) {
-                // Produto JÁ EXISTE (selecionado da lista)
                 produto = produtoRepository.findById(itemDto.getProdutoId())
                         .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
             } else {
-                // Produto NOVO (digitado na hora)
-                // Ex: "Banho Tosa Higiênica"
-                produto = new Produto();
-                produto.setNome(itemDto.getNome());
-                produto.setPreco(itemDto.getPreco());
-                produto = produtoRepository.save(produto); // Cadastra no banco para a próxima vez
+                // Produto NOVO
+                String nomeProduto = itemDto.getNome().trim();
+
+                produto = produtoRepository.findByNomeIgnoreCase(nomeProduto)
+                        .orElseGet(() -> {
+                            // Se NÃO existir, aí sim cria um novo
+                            Produto novo = new Produto();
+                            novo.setNome(nomeProduto);
+                            novo.setPreco(itemDto.getPreco());
+                            return produtoRepository.save(novo);
+                        });
             }
 
-            // Cria o item do pedido
             ItemPedido itemPedido = new ItemPedido();
             itemPedido.setProduto(produto);
             itemPedido.setQuantidade(itemDto.getQuantidade());
 
-            // Lógica de Preço:
-            // Se o usuário mandou um preço explícito (desconto ou valor novo), usa ele.
-            // Se não, usa o preço do cadastro do produto.
             Double precoFinal = (itemDto.getPreco() != null) ? itemDto.getPreco() : produto.getPreco();
             itemPedido.setPrecoUnitario(precoFinal);
 
@@ -88,21 +90,7 @@ public class VendaService {
         pedido.setTotal(totalCalculado);
 
         // === 4. FINALIZAR ===
-        Pedido pedidoSalvo = pedidoRepository.save(pedido);
-
-        // Impressão em Thread separada
-        /* 
-        new Thread(() -> {
-            try {
-                Pedido pedidoCompleto = pedidoRepository.findPedidoCompletoPorId(pedidoSalvo.getId());
-                printerService.imprimirCupom(pedidoCompleto);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
-        */
-
-        return pedidoSalvo;
+        return pedidoRepository.save(pedido);
     }
 
     public void imprimirVenda(Long idPedido) {
