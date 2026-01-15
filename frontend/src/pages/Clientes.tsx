@@ -29,11 +29,19 @@ export function Clientes() {
     }
 
     // Filtro de busca
-    const clientesFiltrados = clientes.filter(c => 
-        c.nome.toLowerCase().includes(busca.toLowerCase()) ||
-        c.telefone?.includes(busca)
-    );
+    const clientesFiltrados = clientes.filter(c => {
+        const termo = busca.toLowerCase().trim();
+        
+        const matchNome = c.nome.toLowerCase().includes(termo);
 
+        const telClienteLimpo = c.telefone ? c.telefone.replace(/\D/g, '') : '';
+        const buscaLimpa = termo.replace(/\D/g, '');
+
+        const matchTelefone = (buscaLimpa.length > 0 && telClienteLimpo.includes(buscaLimpa)) || 
+                              (c.telefone && c.telefone.includes(termo));
+
+        return matchNome || matchTelefone;
+    });
     return (
         <div className="flex h-screen bg-gray-100 font-sans">
             <Sidebar />
