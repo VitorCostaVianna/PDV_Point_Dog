@@ -251,7 +251,7 @@ export function PDV() {
             {/* === TELA PRINCIPAL (COLUNA ESQUERDA) === */}
             <div className="w-2/3 p-6 flex flex-col gap-6">
                 <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
-                    <span className="text-[#F28322]"><ShoppingCart /></span> Point Dog PDV
+                    <span className="text-[#F28322]"><ShoppingCart /></span> Point Dog
                 </h1>
 
                 {}
