@@ -10,7 +10,9 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "produtos")
+@Table(name = "produtos", indexes = {
+    @Index(name = "idx_produto_nome", columnList = "nome")
+})
 public class Produto {
 
     @Id

@@ -16,14 +16,10 @@ public class ClienteController {
 
     @Autowired private ClienteRepository clienteRepository;
     @Autowired private PedidoRepository pedidoRepository;
-
-    // 1. Listar todos os clientes (para a barra lateral)
     @GetMapping
     public List<Cliente> listarTodos() {
         return clienteRepository.findAll();
     }
-
-    // 2. Pegar o histórico de compras de um cliente
     @GetMapping("/{id}/historico")
     public List<Pedido> getHistorico(@PathVariable Long id) {
         return pedidoRepository.findByClienteId(id);

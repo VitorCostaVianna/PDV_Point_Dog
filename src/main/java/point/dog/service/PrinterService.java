@@ -19,7 +19,6 @@ public class PrinterService {
             PrintService printService = null;
             OutputStream outputStream = null;
 
-            // === 1. BUSCA INTELIGENTE DA IMPRESSORA ===
             String[] impressorasInstaladas = PrinterOutputStream.getListPrintServicesNames();
             
             for (String nome : impressorasInstaladas) {

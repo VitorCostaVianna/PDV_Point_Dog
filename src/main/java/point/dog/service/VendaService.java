@@ -26,13 +26,10 @@ public class VendaService {
 
         Cliente cliente;
 
-        // === 1. RESOLVER CLIENTE ===
         if (dto.getClienteId() != null) {
-            // Se veio ID, busca o existente
             cliente = clienteRepository.findById(dto.getClienteId())
                     .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
         } else {
-            // Se NÃO veio ID, valida e cria NOVO
             if (dto.getClienteNome() == null || dto.getClienteNome().isBlank() ||
                     dto.getClienteEndereco() == null || dto.getClienteEndereco().isBlank() ||
                     dto.getClienteTelefone() == null || dto.getClienteTelefone().isBlank()) {
@@ -40,7 +37,6 @@ public class VendaService {
                 throw new RuntimeException("Para novos clientes, Nome, Endereço e Telefone são obrigatórios!");
             }
 
-            // AQUI ESTAVA O ERRO: A criação deve ficar SÓ aqui dentro do ELSE
             cliente = new Cliente();
             cliente.setNome(dto.getClienteNome());
             cliente.setTelefone(dto.getClienteTelefone());
@@ -48,14 +44,12 @@ public class VendaService {
             cliente = clienteRepository.save(cliente);
         }
 
-        // === 2. INICIAR O PEDIDO ===
         Pedido pedido = new Pedido();
         pedido.setCliente(cliente);
         pedido.setDataHora(LocalDateTime.now());
 
         double totalCalculado = 0.0;
 
-        // === 3. RESOLVER OS PRODUTOS ===
         for (VendaDTO.ItemInput itemDto : dto.getItens()) {
             Produto produto;
 
@@ -63,12 +57,10 @@ public class VendaService {
                 produto = produtoRepository.findById(itemDto.getProdutoId())
                         .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
             } else {
-                // Produto NOVO
                 String nomeProduto = itemDto.getNome().trim();
 
                 produto = produtoRepository.findByNomeIgnoreCase(nomeProduto)
                         .orElseGet(() -> {
-                            // Se NÃO existir, aí sim cria um novo
                             Produto novo = new Produto();
                             novo.setNome(nomeProduto);
                             novo.setPreco(itemDto.getPreco());
@@ -89,7 +81,6 @@ public class VendaService {
 
         pedido.setTotal(totalCalculado);
 
-        // === 4. FINALIZAR ===
         return pedidoRepository.save(pedido);
     }
 
