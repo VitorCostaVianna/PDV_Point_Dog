@@ -15,4 +15,6 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     
     // Buscar por telefone (para identificar cliente na hora do pedido)
     Cliente findByTelefone(String telefone);
+
+    Cliente findByEndereco(String endereco);
 }
