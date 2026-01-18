@@ -37,11 +37,17 @@ public class VendaService {
                 throw new RuntimeException("Para novos clientes, Nome, Endereço e Telefone são obrigatórios!");
             }
 
-            cliente = new Cliente();
-            cliente.setNome(dto.getClienteNome());
-            cliente.setTelefone(dto.getClienteTelefone());
-            cliente.setEndereco(dto.getClienteEndereco());
-            cliente = clienteRepository.save(cliente);
+            String tel = dto.getClienteTelefone();
+            Cliente existente = clienteRepository.findByTelefone(tel);
+            if (existente != null) {
+                cliente = existente;
+            } else {
+                cliente = new Cliente();
+                cliente.setNome(dto.getClienteNome());
+                cliente.setTelefone(dto.getClienteTelefone());
+                cliente.setEndereco(dto.getClienteEndereco());
+                cliente = clienteRepository.save(cliente);
+            }
         }
 
         Pedido pedido = new Pedido();

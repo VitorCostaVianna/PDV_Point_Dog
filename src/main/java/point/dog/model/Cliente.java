@@ -29,6 +29,6 @@ public class Cliente {
     private String endereco;
 
     @NotBlank(message = "O telefone é obrigatório")
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String telefone;
 }

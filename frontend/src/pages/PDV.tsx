@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react'; // <--- 1. Importei useMemo aqui
+import { useState, useEffect, useRef, useMemo } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import { Plus, Trash2, Printer, ShoppingCart, UserPlus, X, CheckCircle } from 'lucide-react';
 import { Sidebar } from '../components/Sidebar';
