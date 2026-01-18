@@ -1,22 +1,45 @@
+Server:
+  port: 8080
+  tomcat:
+    threads:
+      max: 20
+      min-spare: 5
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+
 spring:
+  main:
+    lazy-initialization: true
+    banner-mode: "off"
+
   application:
     name: sistema_gerenciamento_point_dog
 
   datasource:
-    url: jdbc:h2:file:./dados/pointdog_db
+    url: jdbc:h2:file:./dados/pointdog_db;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE
+    driverClassName: org.h2.Driver
     driver-class-name: org.h2.Driver
     username: sa
     password:
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 2
 
   jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
     show-sql: true
     properties:
       hibernate:
-        format_sql: true
-    database-platform: org.hibernate.dialect.H2Dialect
+        format_sql: false
 
   h2:
     console:
       enabled: true
+
+logging:
+  level:
+    root: WARN
+    point.dog: INFO
