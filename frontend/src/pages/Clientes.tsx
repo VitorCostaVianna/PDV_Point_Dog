@@ -14,7 +14,6 @@ export function Clientes() {
         carregarClientes();
     }, []);
 
-    // Quando seleciona um cliente, busca o histórico dele
     useEffect(() => {
         if (selecionado && selecionado.id) {
             buscarHistoricoCliente(selecionado.id).then(setHistorico);
@@ -28,22 +27,26 @@ export function Clientes() {
         setClientes(dados);
     }
 
-    // Filtro de busca inteligente
     const clientesFiltrados = clientes.filter(c => {
         const termo = busca.toLowerCase().trim();
+        
         const matchNome = c.nome.toLowerCase().includes(termo);
+
+        const matchEndereco = c.endereco?.toLowerCase().includes(termo);
+
         const telClienteLimpo = c.telefone ? c.telefone.replace(/\D/g, '') : '';
         const buscaLimpa = termo.replace(/\D/g, '');
         const matchTelefone = (buscaLimpa.length > 0 && telClienteLimpo.includes(buscaLimpa)) || 
                               (c.telefone && c.telefone.includes(termo));
-        return matchNome || matchTelefone;
+
+        return matchNome || matchTelefone || matchEndereco;
     });
 
     return (
         <div className="flex h-screen bg-gray-50 font-sans">
             <Sidebar />
 
-            {/* === COLUNA 1: LISTA DE CLIENTES === */}
+            {}
             <div className="w-1/3 bg-white border-r border-gray-200 flex flex-col">
                 <div className="p-6 border-b border-gray-100">
                     <h1 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
@@ -53,7 +56,7 @@ export function Clientes() {
                         <Search className="absolute left-3 top-3 text-gray-400" size={20}/>
                         <input 
                             className="w-full pl-10 p-3 bg-gray-50 border-0 rounded-xl outline-none focus:ring-2 focus:ring-[#F28322] transition-all"
-                            placeholder="Buscar por nome ou telefone..."
+                            placeholder="Nome, Telefone ou Endereço..."
                             value={busca}
                             onChange={e => setBusca(e.target.value)}
                         />
@@ -72,9 +75,17 @@ export function Clientes() {
                             }`}
                         >
                             <p className="font-bold text-gray-800">{cliente.nome}</p>
-                            <p className="text-sm text-gray-500 flex items-center gap-1">
+                            
+                            {}
+                            <p className="text-sm text-gray-500 flex items-center gap-1 mb-1">
                                 <Phone size={12} className={selecionado?.id === cliente.id ? "text-[#F28322]" : "text-gray-400"}/> 
                                 {cliente.telefone}
+                            </p>
+
+                            {}
+                            <p className="text-xs text-gray-400 flex items-center gap-1 truncate">
+                                <MapPin size={10}/> 
+                                {cliente.endereco}
                             </p>
                         </div>
                     ))}
@@ -93,7 +104,7 @@ export function Clientes() {
                 {selecionado ? (
                     <div className="max-w-4xl mx-auto">
                         
-                        {/* Cartão de Info do Cliente */}
+                        {}
                         <div className="bg-white p-6 rounded-2xl shadow-sm mb-8 border-t-8 border-[#F28322]">
                             <h2 className="text-3xl font-bold text-gray-800 mb-6">{selecionado.nome}</h2>
                             <div className="grid grid-cols-2 gap-4 text-gray-600">

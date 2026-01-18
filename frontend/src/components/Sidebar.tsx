@@ -10,14 +10,11 @@ export function Sidebar() {
     ];
 
     return (
-        // Fundo com o Laranja Principal (#F28322)
         <div className="w-20 bg-[#F28322] h-screen flex flex-col items-center py-6 shadow-xl z-50">
             
-            {/* === ÁREA DA LOGO === */}
+            {}
             <div className="mb-8 p-2 bg-white rounded-full shadow-lg">
-                {/* DICA: Para colocar a logo real, substitua o ícone <Dog /> pela tag img:
-                   <img src="/logo.png" alt="Point Dog" className="w-8 h-8" />
-                */}
+                {}
                 <Dog size={32} className="text-[#F28322]" />
             </div>
             

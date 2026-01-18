@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react'; // <--- 1. Importei useMemo aqui
 import CreatableSelect from 'react-select/creatable';
 import { Plus, Trash2, Printer, ShoppingCart, UserPlus, X, CheckCircle } from 'lucide-react';
 import { Sidebar } from '../components/Sidebar';
@@ -30,6 +30,19 @@ export function PDV() {
         setListaProdutos(await buscarProdutos());
         setListaClientes(await buscarClientes());
     }
+    
+    const opcoesProdutos = useMemo(() => 
+        listaProdutos.map(p => ({ value: p.id, label: p.nome })), 
+    [listaProdutos]);
+
+    const opcoesClientes = useMemo(() => 
+        listaClientes.map(c => ({ 
+            value: c.id, 
+            label: c.nome, 
+            telefone: c.telefone, 
+            endereco: c.endereco 
+        })), 
+    [listaClientes]);
 
     // === LÓGICA DO CLIENTE ===
     const handleClienteChange = (newValue: any) => {
@@ -57,7 +70,7 @@ export function PDV() {
         setShowModalCliente(false);
     };
 
-    // === LÓGICA DO CARRINHO (MANTIDA IGUAL) ===
+    // === LÓGICA DO CARRINHO ===
     const adicionarAoCarrinho = () => {
         if (!produtoInput) return;
 
@@ -97,7 +110,7 @@ export function PDV() {
         setCarrinho(novoCarrinho);
     };
 
-    // === LÓGICA DE FINALIZAR (MANTIDA IGUAL) ===
+    // === LÓGICA DE FINALIZAR ===
     const handleFinalizar = async () => {
         if (carrinho.length === 0) return alert("Carrinho vazio!");
         if (!clienteSelecionado) return alert("Selecione um cliente para continuar.");
@@ -145,7 +158,6 @@ export function PDV() {
         }
     };
 
-    // === LÓGICA DO BOTÃO IMPRIMIR ===
     const handleImprimirEFechar = async () => {
         if (vendaConcluida?.id) {
             try {
@@ -157,7 +169,7 @@ export function PDV() {
         setVendaConcluida(null);
     };
 
-    // === RENDERIZAÇÃO COM NOVA PALETA ===
+    // === RENDERIZAÇÃO ===
     return (
         <div className="flex h-screen bg-gray-50 font-sans relative">
             <Sidebar />
@@ -242,26 +254,24 @@ export function PDV() {
                     <span className="text-[#F28322]"><ShoppingCart /></span> Point Dog PDV
                 </h1>
 
-                {/* Card Cliente */}
+                {}
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 border-l-8 border-l-[#F28322]">
                     <h2 className="text-lg font-bold text-gray-700 mb-4">1. Identificar Cliente</h2>
                     <div className="flex gap-4 items-center">
                         <div className="flex-1">
                             <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Nome do Cliente</label>
+                            
+                            {}
                             <CreatableSelect
                                 isClearable
                                 placeholder="Busque ou Digite para Cadastrar..."
                                 value={clienteSelecionado}
                                 onChange={handleClienteChange}
-                                options={listaClientes.map(c => ({
-                                    value: c.id,
-                                    label: c.nome,
-                                    telefone: c.telefone,
-                                    endereco: c.endereco
-                                }))}
+                                options={opcoesClientes} 
                                 formatCreateLabel={(input) => `✨ Cadastrar NOVO: "${input}"`}
                                 className="text-lg"
                             />
+
                         </div>
                     </div>
                     {clienteSelecionado && (
@@ -272,12 +282,13 @@ export function PDV() {
                     )}
                 </div>
 
-                {/* Card Produto */}
+                {}
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 border-l-8 border-l-[#F28322] flex-1">
                     <h2 className="text-lg font-bold text-gray-700 mb-4">2. Adicionar Produtos</h2>
 
                     <div className="mb-4">
-                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Produto / Serviço</label>
+                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Produto</label>
+                        
                         <CreatableSelect
                             isClearable
                             autoFocus
@@ -295,9 +306,10 @@ export function PDV() {
                                     setTimeout(() => precoRef.current?.focus(), 100);
                                 }
                             }}
-                            options={listaProdutos.map(p => ({ value: p.id, label: p.nome }))}
+                            options={opcoesProdutos}
                             className="text-lg"
                         />
+
                     </div>
 
                     <div className="flex gap-4 items-end">
@@ -335,7 +347,7 @@ export function PDV() {
                 </div>
             </div>
 
-            {/* === COLUNA DIREITA: CUPOM === */}
+            {}
             <div className="w-1/3 bg-white border-l border-gray-200 shadow-2xl flex flex-col z-10">
                 <div className="p-6 bg-gray-50 border-b border-gray-200">
                     <h2 className="text-xl font-bold text-gray-800 mb-2">Resumo do Pedido</h2>
@@ -359,7 +371,7 @@ export function PDV() {
                     </div>
                 </div>
 
-                {/* Lista Rolável */}
+                {}
                 <div className="flex-1 overflow-auto p-4 bg-gray-50/50">
                     {carrinho.length === 0 ? (
                         <div className="text-center text-gray-300 mt-20">
@@ -386,7 +398,7 @@ export function PDV() {
                     )}
                 </div>
 
-                {/* Rodapé Total */}
+                {}
                 <div className="p-6 bg-gray-900 text-white">
                     <div className="flex justify-between items-end mb-4">
                         <span className="text-gray-400 font-bold text-sm uppercase tracking-wider">Total a Pagar</span>

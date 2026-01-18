@@ -11,14 +11,11 @@ export const finalizarVenda = async (dados: VendaDTO) => {
   return response.data;
 };
 
-// NOVA FUNÇÃO
 export const imprimirVenda = async (id: number) => {
   await api.post(`/vendas/${id}/imprimir`);
 };
 
-// Futuramente você criará os endpoints GET no Java para preencher estas listas
 export const buscarProdutos = async () => {
-    // Por enquanto retorna vazio se o endpoint não existir, para não travar a tela
     try {
         const response = await api.get('/produtos'); 
         return response.data;
