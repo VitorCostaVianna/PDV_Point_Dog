@@ -122,3 +122,54 @@ LinkedIn:https://www.linkedin.com/in/vitor-costa-vianna-5449832b8/
 Email: vitorcostavianna@gmail.com
 
 Feito com 🧡 para a comunidade Point Dog.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# English Version
+
+# 🐶 Point Dog POS - Desktop Point of Sale System
+
+> **Optimized Desktop Solution for Local Retail.**
+
+## 📖 About the Project
+
+This system was custom-built for **Point Dog Pet Shop**, a local business with over **27 years** in the market.
+
+Unlike modern Cloud/SaaS trends, this project was architected as an **On-Premise Desktop Solution**. The goal was to solve real-world pain points: the need for zero-latency checkout, offline availability, and zero recurring server costs.
+
+## 🚀 Key Features
+
+### 🖨️ Native Thermal Printing (Hardware)
+Unlike web systems that rely on browser print dialogs, Point Dog POS communicates **directly with the printer driver** (ESC/POS protocol via Java).
+* **Tech:** Raw ESC/POS commands.
+* **Performance:** Asynchronous print queue to prevent UI freezing.
+
+### ⚡ Low-Spec Hardware Optimization
+Engineered to run on legacy hardware (e.g., 4GB RAM).
+* **Backend:** Fine-tuned JVM (`-Xmx512m`) and Garbage Collector.
+* **Frontend:** Heavy use of `useMemo` and Lazy Loading.
+* **Database:** Embedded H2 Database with optimized indexing (`@Index`).
+
+### 🛠️ Architecture
+* **Frontend:** React + Vite (Bundled inside the JAR).
+* **Backend:** Spring Boot (API & Hardware Management).
+* **Deployment:** Single `.bat` script that launches the entire environment.
+
+## 🛠️ Tech Stack
+
+* **Java 21 / Spring Boot 3:** Core stability and hardware management.
+* **H2 Database:** Embedded SQL database (File-based).
+* **EscPos:** Library for raw thermal printer communication.
+* **React + TypeScript:** Type-safe, reactive UI.
+* **Vite:** High-performance tooling.
+* **Tailwind CSS:** Styling.
+
+## ⚙️ How to Run
+
+1. **Clone the repo**
+2. **Run Backend:** `./mvnw spring-boot:run`
+3. **Run Frontend:** `npm run dev` inside `frontend/` folder.
+4. **Access:** `http://localhost:5173`
+
+---
+*Developed by Vitor Costa.*
