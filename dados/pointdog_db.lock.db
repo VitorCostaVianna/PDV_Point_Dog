@@ -1,0 +1,6 @@
+#FileLock
+#Sun Feb 01 15:44:06 GMT-03:00 2026
+hostName=192.168.0.2
+id=19c1a84eb4889198607cf78cdc19374ff2624e2607e
+method=file
+server=192.168.0.2\:60960

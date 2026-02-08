@@ -52,7 +52,7 @@ public class PrinterService {
 
                 // Cabeçalho
                 escpos.writeLF(titulo, "Point Dog Pet Shop");
-                escpos.writeLF(centro, "Cumpom não fiscal");
+                escpos.writeLF(centro, "Cumpom nao fiscal");
                 escpos.writeLF("--------------------------------");
 
                 // Dados Pedido
