@@ -1,175 +1,93 @@
-# 🐶 Point Dog PDV - Sistema de Gestão & Frente de Caixa
+# 🐶 Point Dog POS — Desktop Point of Sale System
 
-> **Solução Desktop otimizada para o varejo de bairro.**
+> **Optimized desktop solution for local retail, engineered for low-spec hardware.**
 
-![Status do Projeto](https://img.shields.io/badge/STATUS-EM_DESENVOLVIMENTO-orange)
-![Java](https://img.shields.io/badge/Java-21%2B-red)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-green)
-![React](https://img.shields.io/badge/React-Vite-blue)
+[![Status](https://img.shields.io/badge/Status-In_Development-orange)](#)
+[![Java](https://img.shields.io/badge/Java-21-red)](#)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-green)](#)
+[![React](https://img.shields.io/badge/React-Vite-blue)](#)
 
-## Sobre o Projeto
+## About the Project
 
-Este sistema foi desenvolvido sob medida para a **Point Dog Pet Shop**, um estabelecimento tradicional que atua há mais de **27 anos** no mercado, oferecendo produtos e serviços de excelência para a comunidade local.
+This system was custom-built for **Point Dog Pet Shop**, a local business with over 27 years in the market, to replace slow, error-prone manual checkout with a fast, reliable point-of-sale system.
 
-Diferente da tendência atual de sistemas 100% em nuvem (SaaS), este projeto foi arquitetado como uma **solução Desktop Local (On-Premise)**. O objetivo foi resolver dores reais do cliente: necessidade de altíssima velocidade no caixa, funcionamento offline (independência da internet) e custo zero com servidores mensais.
+Unlike modern cloud/SaaS trends, this project was deliberately architected as an **on-premise desktop solution**. The goal was to solve real, concrete pain points: near-zero checkout latency, full offline availability, and zero recurring server costs for a small local business — priorities that a cloud-first architecture wouldn't have served as well.
 
-O sistema foca no essencial: realizar vendas de forma ágil, gerenciar histórico de clientes e emitir comprovantes não fiscais instantaneamente.
+The system focuses on the essentials: fast sales processing, customer history management, and instant non-fiscal receipt printing.
 
----
+## Key Technical Highlights
 
-##  Destaques Técnicos & Funcionalidades
+### 🖨️ Native Thermal Printing (Hardware-level)
+Unlike web-based systems that rely on the browser's print dialog, Point Dog POS communicates **directly with the printer driver/port** (tested on Elgin i9, Epson TM-T20) using the raw **ESC/POS protocol via Java** — no PDF rendering step, no print-dialog friction, near-instant receipt output.
 
-###  Impressão Térmica Nativa (Hardware)
-Um dos grandes diferenciais do projeto. Diferente de sistemas web que abrem a janela de impressão do navegador (PDF), o Point Dog PDV comunica-se **diretamente com o driver/porta da impressora** (Ex: Elgin i9, Epson TM-T20).
-* **Tecnologia:** Protocolo ESC/POS via Java.
+### ⚡ Low-Spec Hardware Optimization
+Engineered to run reliably on modest checkout-counter hardware (e.g., 4GB RAM):
+- **Backend:** Fine-tuned JVM memory limits (`-Xmx512m`) and Garbage Collector settings for low memory footprint
+- **Frontend:** Heavy use of `useMemo` and lazy loading to avoid unnecessary re-renders
+- **Database:** H2 (file-based) with optimized indexing (`@Index`) for instant lookups, even with thousands of records
 
-### Otimização para Hardware Modesto (Low-Spec)
-O sistema foi projetado para rodar em computadores com recursos limitados (ex: 4GB de RAM), comuns em balcões de lojas.
-* **Backend:** Configuração fina do JVM (`-Xmx512m`) e Garbage Collector para baixo consumo de memória.
-* **Frontend:** Uso intenso de `useMemo` e `Lazy Loading` para evitar renderizações desnecessárias.
-* **Banco de Dados:** H2 Database em modo arquivo com índices otimizados (`@Index`) para buscas instantâneas mesmo com milhares de registros.
+### 🏗️ Desktop-First Architecture
+- **Frontend:** React + Vite, running locally
+- **Backend:** Spring Boot, serving both as the API and as the hardware integration layer
+- **Startup:** A single custom `.bat` script boots the entire environment with one click — no technical setup required from the end user
 
-###  Arquitetura Desktop-First
-* **Frontend:** React + Vite rodando localmente.
-* **Backend:** Spring Boot servindo como API e gerenciador de hardware.
-* **Start-up:** Script `.bat` personalizado que sobe todo o ambiente com um clique, sem necessidade de configuração técnica pelo usuário final.
+## Tech Stack
 
----
+**Backend (Java Ecosystem)**
+- Java 21 / Spring Boot 3 — core stability and dependency injection
+- H2 Database — embedded, file-based SQL database (no separate DB server install needed on the client machine)
+- EscPos (Anastacio Cintra) — library for raw thermal-printer communication
+- Lombok — boilerplate reduction
 
-## Stack Utilizada
+**Frontend (React Ecosystem)**
+- React + TypeScript — reactive UI with type safety
+- Vite — fast build tooling
+- Tailwind CSS — rapid, responsive styling
+- Lucide React — lightweight icon set
+- React-Select — robust product/customer search component
 
-A escolha da stack visou robustez, facilidade de manutenção e tipagem estática.
+## Project Structure
 
-### Backend (Java Ecosystem)
-* **Java 21 / Spring Boot 3:** Para estabilidade e injeção de dependência.
-* **H2 Database:** Banco de dados SQL embutido (file-based). Escolhido por não exigir instalação de um servidor de banco separado (como MySQL/Postgres), facilitando a instalação na máquina do cliente.
-* **EscPos (Anastacio Cintra):** Biblioteca para comunicação raw com impressoras térmicas.
-* **Lombok:** Para redução de código boilerplate.
-
-### Frontend (React Ecosystem)
-* **React + TypeScript:** Para interfaces reativas e segurança de tipos.
-* **Vite:** Build tool extremamente rápida.
-* **Tailwind CSS:** Para estilização rápida e responsiva.
-* **Lucide React:** Ícones leves e modernos.
-* **React-Select:** Componente robusto para busca de produtos e clientes.
-
-### Identidade Visual
-* Paleta de cores personalizada baseada na marca Point Dog:
-    * **Laranja Principal:** `#F28322`
-    * **Laranja Destaque:** `#F68C3F`
-
----
-
-## Estrutura do Projeto
-
-O projeto segue uma **Arquitetura em Camadas (Layered Architecture)** clássica e limpa:
-
-```text
+```
 src/
-├── controller/  # Endpoints da API (REST)
-├── service/     # Regras de Negócio e Lógica de Impressão
-├── repository/  # Acesso a Dados (Spring Data JPA)
-├── model/       # Entidades do Banco (ORM)
-└── dto/         # Objetos de Transferência de Dados
+├── controller/  # REST API endpoints
+├── service/     # Business rules & printing logic
+├── repository/  # Data access (Spring Data JPA)
+├── model/       # Database entities (ORM)
+└── dto/         # Data transfer objects
 ```
 
-## Como Rodar o Projeto
-### Pré-requisitos
-* Java JDK 17 ou superior.
-* Node.js 18 ou superior.
-* Impressora Térmica (Opcional - o sistema emula no console se não houver).
+## How to Run
 
-### Passo a Passo
+**Prerequisites**
+- Java JDK 17+
+- Node.js 18+
+- Thermal printer (optional — the system emulates output in the console if none is connected)
 
-Clone o repositório
+**Steps**
 
-```Bash
-git clone [https://github.com/seu-usuario/point-dog-pdv.git](https://github.com/seu-usuario/point-dog-pdv.git)
-```
+```bash
+# Clone the repo
+git clone https://github.com/VitorCostaVianna/PDV_Point_Dog.git
+cd PDV_Point_Dog
 
-### Subir o Backend
-```Bash
-cd point-dog-pdv
+# Run the backend
 ./mvnw spring-boot:run
-```
 
-### Subir o Frontend
-```Bash
+# Run the frontend
 cd frontend
 npm install
 npm run dev
 ```
-Acesse: http://localhost:5173
 
-## Configuração de Produção (Deploy Local)
-Para o ambiente do cliente, utilizamos um script de inicialização otimizado (iniciar_sistema.bat) que:
+Access at `http://localhost:5173`
 
-* Limita a memória do Java para proteger o Windows.
+**Production deployment** uses an optimized startup script (`iniciar_sistema.bat`) that limits JVM memory, disables unnecessary logging, and starts the database in server mode:
 
-* Desativa logs desnecessários.
-
-* Inicia o servidor de banco de dados em modo servidor (Auto-Server).
-
-```Bash
+```bash
 java -Xms256m -Xmx512m -jar sistema-gerenciamento-point-dog.jar
 ```
 
-📞 Contato
-Desenvolvido por Vitor Costa.
+## Contact
 
-LinkedIn:https://www.linkedin.com/in/vitor-costa-vianna-5449832b8/
-
-Email: vitorcostavianna@gmail.com
-
-Feito com 🧡 para a comunidade Point Dog.
-
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-# English Version
-
-# 🐶 Point Dog POS - Desktop Point of Sale System
-
-> **Optimized Desktop Solution for Local Retail.**
-
-## 📖 About the Project
-
-This system was custom-built for **Point Dog Pet Shop**, a local business with over **27 years** in the market.
-
-Unlike modern Cloud/SaaS trends, this project was architected as an **On-Premise Desktop Solution**. The goal was to solve real-world pain points: the need for zero-latency checkout, offline availability, and zero recurring server costs.
-
-## 🚀 Key Features
-
-### 🖨️ Native Thermal Printing (Hardware)
-Unlike web systems that rely on browser print dialogs, Point Dog POS communicates **directly with the printer driver** (ESC/POS protocol via Java).
-* **Tech:** Raw ESC/POS commands.
-* **Performance:** Asynchronous print queue to prevent UI freezing.
-
-### ⚡ Low-Spec Hardware Optimization
-Engineered to run on legacy hardware (e.g., 4GB RAM).
-* **Backend:** Fine-tuned JVM (`-Xmx512m`) and Garbage Collector.
-* **Frontend:** Heavy use of `useMemo` and Lazy Loading.
-* **Database:** Embedded H2 Database with optimized indexing (`@Index`).
-
-### 🛠️ Architecture
-* **Frontend:** React + Vite (Bundled inside the JAR).
-* **Backend:** Spring Boot (API & Hardware Management).
-* **Deployment:** Single `.bat` script that launches the entire environment.
-
-## 🛠️ Tech Stack
-
-* **Java 21 / Spring Boot 3:** Core stability and hardware management.
-* **H2 Database:** Embedded SQL database (File-based).
-* **EscPos:** Library for raw thermal printer communication.
-* **React + TypeScript:** Type-safe, reactive UI.
-* **Vite:** High-performance tooling.
-* **Tailwind CSS:** Styling.
-
-## ⚙️ How to Run
-
-1. **Clone the repo**
-2. **Run Backend:** `./mvnw spring-boot:run`
-3. **Run Frontend:** `npm run dev` inside `frontend/` folder.
-4. **Access:** `http://localhost:5173`
-
----
-*Developed by Vitor Costa.*
+Developed by Vitor Costa · [LinkedIn](https://www.linkedin.com/in/vitor-costa-vianna-5449832b8/) · vitorcostavianna@gmail.com
